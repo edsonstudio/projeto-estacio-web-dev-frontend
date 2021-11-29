@@ -1,6 +1,9 @@
+import { AcaoService } from './../../services/acao.service';
 import { MenuItem } from 'primeng/api';
-import { Component, OnInit } from '@angular/core';
+import { PrimeNGConfig } from 'primeng/api';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import Acao from 'src/app/models/acao.model';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -11,10 +14,30 @@ export class DashboardPageComponent implements OnInit {
 
   dockItems: MenuItem[] = [];
   menubarItems: any[] = [];
+  acoes: Acao[] = [];
 
-  constructor() { }
+  nome: string = "";
+  cotacao: number = 0;
+  descricao: string = "";
+  variacao: number = 0;
+
+  incluirAcao: boolean = false;
+
+  displayPosition: boolean = false;
+  displayModal: boolean = false;
+  position: string = "";
+
+  constructor(
+    private acaoService: AcaoService,
+    private primengConfig: PrimeNGConfig,
+    private _cdr: ChangeDetectorRef
+    ) { }
 
   ngOnInit(): void {
+
+    this.listarAcoes();
+
+    this.primengConfig.ripple = true;
 
     this.dockItems = [
       {
@@ -27,6 +50,7 @@ export class DashboardPageComponent implements OnInit {
         },
         icon: "assets/showcase/images/dock/finder.svg",
         command: () => {
+          this.showPositionDialog('left');
           //this.displayFinder = true;
         }
       },
@@ -97,131 +121,156 @@ export class DashboardPageComponent implements OnInit {
 
     this.menubarItems = [
       {
-        label: 'Finder',
-        className: 'menubar-root'
+        label: 'Home',
+        className: 'menubar-root',
+        command: () => {
+          this.showPositionDialog('left');
+        },
       },
       {
-        label: 'File',
+        label: 'Ações',
         items: [
           {
-            label: 'New',
+            label: 'Nova',
             icon: 'pi pi-fw pi-plus',
-            items: [
-              {
-                label: 'Bookmark',
-                icon: 'pi pi-fw pi-bookmark'
-              },
-              {
-                label: 'Video',
-                icon: 'pi pi-fw pi-video'
-              },
-
-            ]
+            command: () => {
+              this.incluirAcaoModal('left');
+            },
           },
           {
-            label: 'Delete',
-            icon: 'pi pi-fw pi-trash'
-          },
-          {
-            separator: true
-          },
-          {
-            label: 'Export',
-            icon: 'pi pi-fw pi-external-link'
+            label: 'Editar',
+            icon: 'pi pi-fw pi-pencil',
+            command: () => {
+              this.showPositionDialog('left');
+            },
           }
         ]
       },
       {
-        label: 'Edit',
+        label: 'Clientes',
         items: [
           {
-            label: 'Left',
-            icon: 'pi pi-fw pi-align-left'
-          },
-          {
-            label: 'Right',
-            icon: 'pi pi-fw pi-align-right'
-          },
-          {
-            label: 'Center',
-            icon: 'pi pi-fw pi-align-center'
-          },
-          {
-            label: 'Justify',
-            icon: 'pi pi-fw pi-align-justify'
-          },
-
-        ]
-      },
-      {
-        label: 'Users',
-        items: [
-          {
-            label: 'New',
+            label: 'Novo',
             icon: 'pi pi-fw pi-user-plus',
-
+            command: () => {
+              this.showPositionDialog('left');
+            },
           },
           {
-            label: 'Delete',
-            icon: 'pi pi-fw pi-user-minus',
-
+            label: 'Editar',
+            icon: 'pi pi-fw pi-pencil',
+            command: () => {
+              this.showPositionDialog('left');
+            },
           },
           {
-            label: 'Search',
+            label: 'Pesquisar',
             icon: 'pi pi-fw pi-users',
             items: [
               {
-                label: 'Filter',
+                label: 'Filtrar',
                 icon: 'pi pi-fw pi-filter',
-                items: [
-                  {
-                    label: 'Print',
-                    icon: 'pi pi-fw pi-print'
-                  }
-                ]
+                command: () => {
+                  this.showPositionDialog('left');
+                },
               },
               {
+                label: 'Listar',
                 icon: 'pi pi-fw pi-bars',
-                label: 'List'
+                command: () => {
+                  this.showPositionDialog('left');
+                },
               }
             ]
           }
         ]
       },
       {
-        label: 'Events',
+        label: 'Carteiras',
         items: [
+          {
+            label: 'Novo',
+            icon: 'pi pi-fw pi-user-plus',
+            command: () => {
+              this.showPositionDialog('left');
+            },
+          },
           {
             label: 'Edit',
             icon: 'pi pi-fw pi-pencil',
-            items: [
-              {
-                label: 'Save',
-                icon: 'pi pi-fw pi-calendar-plus'
-              },
-              {
-                label: 'Delete',
-                icon: 'pi pi-fw pi-calendar-minus'
-              }
-            ]
+            command: () => {
+              this.showPositionDialog('left');
+            },
           },
           {
-            label: 'Archieve',
-            icon: 'pi pi-fw pi-calendar-times',
+            label: 'Pesquisar',
+            icon: 'pi pi-fw pi-users',
             items: [
               {
-                label: 'Remove',
-                icon: 'pi pi-fw pi-calendar-minus'
+                label: 'Filtrar',
+                icon: 'pi pi-fw pi-filter',
+                command: () => {
+                  this.showPositionDialog('left');
+                },
+              },
+              {
+                label: 'Listar',
+                icon: 'pi pi-fw pi-bars',
+                command: () => {
+                  this.showPositionDialog('left');
+                },
               }
             ]
           }
         ]
-      },
-      {
-        label: 'Quit'
       }
     ];
 
   }
 
+  listarAcoes() {
+    this.acoes = [];
+
+    this.acaoService.listarAcoes()
+    .subscribe(
+      acoes => this.acoes = acoes,
+      error => console.log(error),
+    );
+
+    this.changeStatus();
+  }
+
+  showPositionDialog(position: string) {
+    this.position = position;
+    this.displayPosition = true;
+  }
+
+  incluirAcaoModal(position: string) {
+    this.position = position;
+    this.incluirAcao = true;
+  }
+
+  salvarAcao() {
+    let acao = new Acao;
+    acao.nome = this.nome;
+    acao.cotacao = this.cotacao;
+    acao.descricao = this.descricao;
+    acao.variacao = this.variacao;
+
+    console.log("acao", acao);
+
+    this.acaoService.incluirAcao(acao)
+      .subscribe(
+        error => console.log(error)
+      );
+
+    this.listarAcoes();
+    this.changeStatus();
+
+    this.incluirAcao = false;
+  }
+
+  changeStatus(): void {
+    this._cdr.detectChanges();
+  }
 }

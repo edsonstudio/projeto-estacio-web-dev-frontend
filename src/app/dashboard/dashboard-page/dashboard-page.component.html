@@ -1,21 +1,79 @@
 <p-menubar [model]="menubarItems">
   <ng-template pTemplate="start">
-      <i class="pi pi-apple"></i>
+    <i class="pi pi-apple"></i>
   </ng-template>
   <ng-template pTemplate="end">
-      <i class="pi pi-video"></i>
-      <i class="pi pi-wifi"></i>
-      <i class="pi pi-volume-up"></i>
-      <span>Fri 13:07</span>
-      <i class="pi pi-search"></i>
-      <i class="pi pi-bars"></i>
+    <i class="pi pi-video"></i>
+    <i class="pi pi-wifi"></i>
+    <i class="pi pi-volume-up"></i>
+    <span>Fri 13:07</span>
+    <i class="pi pi-search"></i>
+    <i class="pi pi-bars"></i>
   </ng-template>
 </p-menubar>
 
 <div class="dock-window dock-advanced">
+  <div class="container">
+    <app-acao-card *ngFor="let acao of acoes" [acao]="acao"></app-acao-card>
+  </div>
   <p-dock [model]="dockItems" position="bottom">
-      <ng-template pTemplate="item" let-item>
-          <img [src]="item.icon" [alt]="item.label" width="100%">
-      </ng-template>
+    <ng-template pTemplate="item" let-item>
+      <img [src]="item.icon" [alt]="item.label" width="100%">
+    </ng-template>
   </p-dock>
+
+  <p-dialog header="Godfather I" [(visible)]="displayPosition" [position]="position" [modal]="true"
+    [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <p>The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
+      His beloved son Michael has just come home from the war, but does not intend to become part of his father's
+      business.
+      Through Michael's life the nature of the family business becomes clear. The business of the family is just like
+      the head of the family,
+      kind and benevolent to those who give respect,
+      but given to ruthless violence whenever anything stands against the good of the family.</p>
+    <ng-template pTemplate="footer">
+      <p-button icon="pi pi-check" (click)="displayPosition=false" label="Yes" class="p-button-text"></p-button>
+      <p-button icon="pi pi-times" (click)="displayPosition=false" label="No"></p-button>
+    </ng-template>
+  </p-dialog>
+
+  <p-dialog header="Incluir Ação" [(visible)]="incluirAcao" [position]="position" [modal]="true"
+    [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+    <div class="p-grid p-fluid">
+
+      <div class="p-col-12 p-md-4">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon">Nome</span>
+          <input type="text" pInputText placeholder="Nome" [(ngModel)]="nome" maxlength="20">
+        </div>
+      </div>
+      <br>
+      <div class="p-field p-col-12 p-md-3">
+        <label for="horizontal">Cotação</label>
+        <p-inputNumber [(ngModel)]="cotacao" [showButtons]="true" buttonLayout="horizontal" inputId="horizontal"
+          spinnerMode="horizontal" [step]="0.25" decrementButtonClass="p-button-danger"
+          incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+          mode="currency" currency="BRL">
+        </p-inputNumber>
+      </div>
+      <br>
+      <div class="p-field p-col-12 p-md-3">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" [rows]="5" [cols]="30" pInputTextarea [autoResize]="true" [(ngModel)]="descricao" maxlength="200"></textarea>
+      </div>
+      <br>
+      <div class="p-field p-col-12 p-md-3">
+        <label for="minmax">Variação</label>
+        <p-inputNumber [(ngModel)]="variacao" inputId="minmax" inputId="minmax" [min]="-100" [max]="100" suffix="%"
+          [showButtons]="true" [step]="0.01">
+        </p-inputNumber>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button icon="pi pi-check" (click)="salvarAcao();" label="Salvar" class="p-button-text"></p-button>
+      <p-button icon="pi pi-times" (click)="incluirAcao=false" label="Cancelar"></p-button>
+    </ng-template>
+  </p-dialog>
 </div>

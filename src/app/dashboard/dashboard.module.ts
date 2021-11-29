@@ -11,10 +11,20 @@ import {ToastModule} from 'primeng/toast';
 import {DialogModule} from 'primeng/dialog';
 import {GalleriaModule} from 'primeng/galleria';
 import {TreeModule} from 'primeng/tree';
+import { ButtonModule } from 'primeng/button';
+import {InputTextModule} from 'primeng/inputtext';
+import {CheckboxModule} from 'primeng/checkbox';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {FormsModule} from '@angular/forms';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+
+import { AcaoCardComponent } from './acao-card/acao-card.component';
 
 @NgModule({
   declarations: [
-    DashboardPageComponent
+    DashboardPageComponent,
+    AcaoCardComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +36,14 @@ import {TreeModule} from 'primeng/tree';
     ToastModule,
     DialogModule,
     GalleriaModule,
-    TreeModule
+    TreeModule,
+    ButtonModule,
+    InputTextModule,
+    CheckboxModule,
+    RadioButtonModule,
+    InputNumberModule,
+    FormsModule,
+    InputTextareaModule
   ],
   exports:[
     DashboardPageComponent

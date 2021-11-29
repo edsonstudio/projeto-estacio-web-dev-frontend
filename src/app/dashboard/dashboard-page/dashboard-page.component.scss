@@ -1,6 +1,15 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
 :host ::ng-deep .dock-window {
   width: 100%;
-  height: calc(100vh - 34px);
+  // height: calc(100vh - 34px);
+  height: 100%;
   position: relative;
   background-image: url("../../../assets/showcase/images/dock/window.jpg");
   background-repeat: no-repeat;
@@ -9,6 +18,7 @@
 
 :host ::ng-deep .p-dock {
   z-index: 1000;
+  position: fixed;
 }
 
 :host ::ng-deep .p-menubar {
@@ -18,7 +28,7 @@
 
   .p-menuitem:first-child {
       font-weight: bold;
-      padding: 0 1rem;
+      // padding: 0 1rem;
   }
 
   .p-menuitem-link {
@@ -49,11 +59,11 @@
 
   .p-dialog {
       .p-dialog-header {
-          padding: .2rem;
+          padding: 10px;
       }
 
       .p-dialog-content {
-          padding: 0;
+          padding: 30px;
       }
 
       p {
@@ -105,3 +115,27 @@
       }
   }
 }
+
+
+:host ::ng-deep .p-button {
+  margin: 0 .5rem 0 0;
+  min-width: 10rem;
+}
+
+p {
+  margin: 0;
+}
+
+:host ::ng-deep .confirmation-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .p-dialog .p-button {
+  min-width: 6rem;
+}
+
+// :host ::ng-deep .p-dialog .p-dialog-content {
+//   padding: 30px;
+// }

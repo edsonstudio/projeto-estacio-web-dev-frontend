@@ -1,0 +1,21 @@
+<div class="flip-card">
+  <div class="flip-card-inner" [class.negative-variation-border]="acao.variacao < 0">
+    <div class="flip-card-front">
+      <div class="stock-info-container">
+        <h2>{{acao.nome}}</h2>
+        <p>{{acao.dataVariacao | date: 'dd/MM/yyyy'}}</p>
+      </div>
+
+      <div class="stock-value-container">
+        <span class="value">{{acao.cotacao | currency:'BRL'}}</span>
+        <span class="variation" [class.negative-variation]="acao.variacao < 0">
+          {{acao.variacao}}
+        </span>
+      </div>
+    </div>
+    <div class="flip-card-back">
+      <h1>{{acao.nome}}</h1>
+      <p>{{acao.descricao}}</p>
+    </div>
+  </div>
+</div>
