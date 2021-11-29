@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -18,15 +19,21 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {FormsModule} from '@angular/forms';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import {DynamicDialogModule} from 'primeng/dynamicdialog';
+import {TableModule} from 'primeng/table';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 import { AcaoCardComponent } from './acao-card/acao-card.component';
+import { AcaoListComponent } from './acao-list/acao-list.component';
 
 @NgModule({
   declarations: [
     DashboardPageComponent,
-    AcaoCardComponent
+    AcaoCardComponent,
+    AcaoListComponent
   ],
   imports: [
+    SharedModule,
     BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
@@ -43,10 +50,15 @@ import { AcaoCardComponent } from './acao-card/acao-card.component';
     RadioButtonModule,
     InputNumberModule,
     FormsModule,
-    InputTextareaModule
+    TableModule,
+    InputTextareaModule,
+    DynamicDialogModule,
+    ConfirmDialogModule
   ],
   exports:[
-    DashboardPageComponent
+    DashboardPageComponent,
+    AcaoCardComponent,
+    AcaoListComponent
   ]
 })
 export class DashboardModule { }

@@ -6,9 +6,12 @@ import {MenubarModule} from 'primeng/menubar';
 import {ToastModule} from 'primeng/toast';
 import {DialogModule} from 'primeng/dialog';
 import {GalleriaModule} from 'primeng/galleria';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    SpinnerComponent
+  ],
   imports: [
     CommonModule,
     DockModule,
@@ -16,6 +19,7 @@ import {GalleriaModule} from 'primeng/galleria';
     ToastModule,
     DialogModule,
     GalleriaModule
-  ]
+  ],
+  exports: [SpinnerComponent]
 })
 export class SharedModule { }

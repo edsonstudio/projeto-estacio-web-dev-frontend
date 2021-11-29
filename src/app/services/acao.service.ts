@@ -49,9 +49,9 @@ export class AcaoService {
       );
   }
 
-  excluirAcao(id: number) {
+  excluirAcao(Id: number) {
     return this.http
-      .delete(this.baseUrl + 'excluir/' + id, httpOptions)
+      .delete(this.baseUrl + 'excluir?Id=' + Id, httpOptions)
       .pipe(
         catchError(this.tratarErro)
       );

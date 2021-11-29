@@ -1,16 +1,19 @@
+import { AcaoListComponent } from './../acao-list/acao-list.component';
 import { AcaoService } from './../../services/acao.service';
 import { MenuItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {DialogService} from 'primeng/dynamicdialog';
 import Acao from 'src/app/models/acao.model';
 
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
-  styleUrls: ['./dashboard-page.component.scss']
+  styleUrls: ['./dashboard-page.component.scss'],
+  providers: [DialogService]
 })
 export class DashboardPageComponent implements OnInit {
+  loader:boolean = false;
 
   dockItems: MenuItem[] = [];
   menubarItems: any[] = [];
@@ -30,6 +33,7 @@ export class DashboardPageComponent implements OnInit {
   constructor(
     private acaoService: AcaoService,
     private primengConfig: PrimeNGConfig,
+    public dialogService: DialogService,
     private _cdr: ChangeDetectorRef
     ) { }
 
@@ -138,10 +142,10 @@ export class DashboardPageComponent implements OnInit {
             },
           },
           {
-            label: 'Editar',
-            icon: 'pi pi-fw pi-pencil',
+            label: 'Listar',
+            icon: 'pi pi-fw pi-bars',
             command: () => {
-              this.showPositionDialog('left');
+              this.listaAcoes();
             },
           }
         ]
@@ -231,12 +235,15 @@ export class DashboardPageComponent implements OnInit {
   listarAcoes() {
     this.acoes = [];
 
+    this.loader = true;
+
     this.acaoService.listarAcoes()
     .subscribe(
       acoes => this.acoes = acoes,
       error => console.log(error),
     );
 
+    this.loader = false;
     this.changeStatus();
   }
 
@@ -251,13 +258,12 @@ export class DashboardPageComponent implements OnInit {
   }
 
   salvarAcao() {
+    this.loader = true;
     let acao = new Acao;
     acao.nome = this.nome;
     acao.cotacao = this.cotacao;
     acao.descricao = this.descricao;
     acao.variacao = this.variacao;
-
-    console.log("acao", acao);
 
     this.acaoService.incluirAcao(acao)
       .subscribe(
@@ -266,9 +272,17 @@ export class DashboardPageComponent implements OnInit {
 
     this.listarAcoes();
     this.changeStatus();
+    this.loader = false;
 
     this.incluirAcao = false;
   }
+
+  listaAcoes() {
+    const ref = this.dialogService.open(AcaoListComponent, {
+        header: 'Lista de Ações',
+        width: '80%'
+    });
+}
 
   changeStatus(): void {
     this._cdr.detectChanges();

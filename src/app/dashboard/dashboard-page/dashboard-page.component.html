@@ -14,6 +14,7 @@
 
 <div class="dock-window dock-advanced">
   <div class="container">
+    <app-spinner *ngIf="loader"></app-spinner>
     <app-acao-card *ngFor="let acao of acoes" [acao]="acao"></app-acao-card>
   </div>
   <p-dock [model]="dockItems" position="bottom">

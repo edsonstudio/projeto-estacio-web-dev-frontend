@@ -1,0 +1,66 @@
+<p-table [value]="acoes" [paginator]="true" [rows]="5" [responsive]="true">
+  <ng-template pTemplate="header">
+      <tr>
+          <th pSortableColumn="nome">Nome <p-sortIcon field="nome"></p-sortIcon></th>
+          <th pSortableColumn="cotacao">Cotação <p-sortIcon field="cotacao"></p-sortIcon></th>
+          <th pSortableColumn="descricao">Descrição <p-sortIcon field="descricao"></p-sortIcon></th>
+          <th style="width: 3rem" pSortableColumn="variacao">Variação <p-sortIcon field="variacao"></p-sortIcon></th>
+          <th style="width: 7rem"></th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-acao>
+      <tr>
+          <td>{{acao.nome}}</td>
+          <td>{{acao.cotacao}}</td>
+          <td>{{acao.descricao}}</td>
+          <td style="width: 3rem">{{acao.variacao}}</td>
+          <td style="width: 7rem">
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarAcao(acao)"></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="excluirAcao(acao)"></button>
+          </td>
+      </tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="editDialog" [style]="{width: '450px'}" header="Editar Ação" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="p-grid p-fluid">
+
+      <div class="p-col-12 p-md-4">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon">Nome</span>
+          <input type="text" pInputText placeholder="Nome" [(ngModel)]="acao.nome" maxlength="20">
+        </div>
+      </div>
+      <br>
+      <div class="p-field p-col-12 p-md-3">
+        <label for="horizontal">Cotação</label>
+        <p-inputNumber [(ngModel)]="acao.cotacao" [showButtons]="true" buttonLayout="horizontal" inputId="horizontal"
+          spinnerMode="horizontal" [step]="0.25" decrementButtonClass="p-button-danger"
+          incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+          mode="currency" currency="BRL">
+        </p-inputNumber>
+      </div>
+      <br>
+      <div class="p-field p-col-12 p-md-3">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" [rows]="5" [cols]="30" pInputTextarea [autoResize]="true" [(ngModel)]="acao.descricao" maxlength="200"></textarea>
+      </div>
+      <br>
+      <div class="p-field p-col-12 p-md-3">
+        <label for="minmax">Variação</label>
+        <p-inputNumber [(ngModel)]="acao.variacao" inputId="minmax" inputId="minmax" [min]="-100" [max]="100" suffix="%"
+          [showButtons]="true" [step]="0.01">
+        </p-inputNumber>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+      <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="salvarAcao(acao)"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
