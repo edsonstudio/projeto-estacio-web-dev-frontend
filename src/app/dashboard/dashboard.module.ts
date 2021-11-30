@@ -22,17 +22,20 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {TableModule} from 'primeng/table';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {DropdownModule} from 'primeng/dropdown';
 
 import { AcaoCardComponent } from './acao-card/acao-card.component';
 import { AcaoListComponent } from './acao-list/acao-list.component';
 import { ClienteListaComponent } from './cliente-lista/cliente-lista.component';
+import { CarteiraListaComponent } from './carteira-lista/carteira-lista.component';
 
 @NgModule({
   declarations: [
     DashboardPageComponent,
     AcaoCardComponent,
     AcaoListComponent,
-    ClienteListaComponent
+    ClienteListaComponent,
+    CarteiraListaComponent
   ],
   imports: [
     SharedModule,
@@ -55,13 +58,15 @@ import { ClienteListaComponent } from './cliente-lista/cliente-lista.component';
     TableModule,
     InputTextareaModule,
     DynamicDialogModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DropdownModule
   ],
   exports:[
     DashboardPageComponent,
     AcaoCardComponent,
     AcaoListComponent,
-    ClienteListaComponent
+    ClienteListaComponent,
+    CarteiraListaComponent
   ]
 })
 export class DashboardModule { }

@@ -7,7 +7,7 @@ class Carteira {
   idCliente: number = 0;
   idAcao: number = 0;
 
-  Cliente: Cliente = new Cliente;
-  Acao: Acao = new Acao;
+  cliente: Cliente = new Cliente;
+  acao: Acao = new Acao;
 }
 export default Carteira;

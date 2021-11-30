@@ -107,3 +107,31 @@
     <p-button icon="pi pi-times" (click)="incluirCliente=false" label="Cancelar"></p-button>
   </ng-template>
 </p-dialog>
+
+<!-- Modal para adicionar Carteira -->
+<p-dialog header="Incluir Carteira" [(visible)]="incluirCarteira" [position]="position" [modal]="true"
+    [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+  <div class="p-grid p-fluid">
+    <div class="p-col-12 p-md-4">
+      <label>Cliente</label>
+      <p-dropdown [options]="clientes" [(ngModel)]="clienteSelecionado" optionLabel="nome"></p-dropdown>
+    </div>
+    <br>
+    <div class="p-col-12 p-md-4">
+      <label>Ação</label>
+      <p-dropdown [options]="acoes" [(ngModel)]="acaoSelecionada" optionLabel="nome"></p-dropdown>
+    </div>
+    <br>
+    <div class="p-field p-col-12 p-md-3">
+      <label for="horizontal">Quantidade</label>
+      <p-inputNumber [(ngModel)]="quantidade" mode="decimal" [showButtons]="true" inputId="minmax-buttons" [min]="0" [max]="100">
+      </p-inputNumber>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-check" (click)="salvarCarteira();" label="Salvar" class="p-button-text"></p-button>
+    <p-button icon="pi pi-times" (click)="incluirCarteira=false" label="Cancelar"></p-button>
+  </ng-template>
+</p-dialog>

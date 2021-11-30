@@ -28,17 +28,17 @@ export class ClienteListaComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.listarAcoes();
+    this.listarClientes();
   }
 
   selectCliente(cliente: Cliente) {
       this.ref.close(cliente);
   }
 
-  listarAcoes() {
+  listarClientes() {
     this.clientes = [];
 
-    this.clienteService.listarAcoes()
+    this.clienteService.listarClientes()
     .subscribe(
       clientes => this.clientes = clientes,
       error => console.log(error),

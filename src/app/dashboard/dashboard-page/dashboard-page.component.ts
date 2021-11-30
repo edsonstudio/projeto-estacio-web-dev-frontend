@@ -1,12 +1,20 @@
-import { ClienteService } from './../../services/cliente.service';
-import { ClienteListaComponent } from './../cliente-lista/cliente-lista.component';
-import { AcaoListComponent } from './../acao-list/acao-list.component';
-import { AcaoService } from './../../services/acao.service';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+
 import { MenuItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import {DialogService} from 'primeng/dynamicdialog';
+import { DialogService } from 'primeng/dynamicdialog';
+
+import { AcaoListComponent } from './../acao-list/acao-list.component';
+import { CarteiraListaComponent } from './../carteira-lista/carteira-lista.component';
+import { ClienteListaComponent } from './../cliente-lista/cliente-lista.component';
+
+
+import { AcaoService } from './../../services/acao.service';
+import { CarteiraService } from './../../services/carteira.service';
+import { ClienteService } from './../../services/cliente.service';
+
 import Acao from 'src/app/models/acao.model';
+import Carteira from 'src/app/models/carteira.model';
 import Cliente from 'src/app/models/cliente.model';
 
 @Component({
@@ -20,7 +28,21 @@ export class DashboardPageComponent implements OnInit {
 
   dockItems: MenuItem[] = [];
   menubarItems: any[] = [];
+
   acoes: Acao[] = [];
+  acaoSelecionada: Acao = new Acao;
+
+  clientes: Cliente[] = [];
+  cliente: Cliente = new Cliente;
+  clienteSelecionado: Cliente = new Cliente;
+
+  carteiras: Carteira[] = [];
+  carteira: Carteira = new Carteira;
+
+  quantidade: number = 0;
+  idCliente: number = 0;
+  idAcao: number = 0;
+  nomeAcao: string = '';
 
   nomeCliente: string = "";
   saldo: number = 0;
@@ -32,6 +54,7 @@ export class DashboardPageComponent implements OnInit {
 
   incluirAcao: boolean = false;
   incluirCliente: boolean = false;
+  incluirCarteira: boolean = false;
 
   displayPosition: boolean = false;
   displayModal: boolean = false;
@@ -40,6 +63,7 @@ export class DashboardPageComponent implements OnInit {
   constructor(
     private acaoService: AcaoService,
     private clienteService: ClienteService,
+    private carteiraService: CarteiraService,
     private primengConfig: PrimeNGConfig,
     public dialogService: DialogService,
     private _cdr: ChangeDetectorRef
@@ -47,7 +71,9 @@ export class DashboardPageComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.listarClientes();
     this.listarAcoes();
+    this.listarCarteiras();
 
     this.primengConfig.ripple = true;
 
@@ -184,14 +210,14 @@ export class DashboardPageComponent implements OnInit {
             label: 'Nova',
             icon: 'pi pi-fw pi-plus',
             command: () => {
-              this.incluirAcaoModal('left');
+              this.incluirCarteiraModal('left');
             },
           },
           {
             label: 'Listar',
             icon: 'pi pi-fw pi-bars',
             command: () => {
-              this.listaAcoes();
+              this.listaCarteiras();
             },
           }
         ]
@@ -203,7 +229,7 @@ export class DashboardPageComponent implements OnInit {
   listarAcoes() {
     this.acoes = [];
 
-    this.loader = true;
+    // this.loader = true;
 
     this.acaoService.listarAcoes()
     .subscribe(
@@ -212,6 +238,30 @@ export class DashboardPageComponent implements OnInit {
     );
 
     this.loader = false;
+    this.changeStatus();
+  }
+
+  listarClientes() {
+    this.clientes = [];
+
+    this.clienteService.listarClientes()
+    .subscribe(
+      clientes => this.clientes = clientes,
+      error => console.log(error),
+    );
+
+    this.changeStatus();
+  }
+
+  listarCarteiras() {
+    this.carteiras = [];
+
+    this.carteiraService.listarCarteiras()
+    .subscribe(
+      carteiras => this.carteiras = carteiras,
+      error => console.log(error),
+    );
+
     this.changeStatus();
   }
 
@@ -230,8 +280,13 @@ export class DashboardPageComponent implements OnInit {
     this.incluirCliente = true;
   }
 
+  incluirCarteiraModal(position: string) {
+    this.position = position;
+    this.incluirCarteira = true;
+  }
+
   salvarAcao() {
-    this.loader = true;
+    // this.loader = true;
     let acao = new Acao;
     acao.nome = this.nome;
     acao.cotacao = this.cotacao;
@@ -251,7 +306,7 @@ export class DashboardPageComponent implements OnInit {
   }
 
   salvarCliente() {
-    this.loader = true;
+    // this.loader = true;
     let cliente = new Cliente;
     cliente.nome = this.nomeCliente;
     cliente.saldo = this.saldo;
@@ -261,10 +316,45 @@ export class DashboardPageComponent implements OnInit {
         error => console.log(error)
       );
 
-    this.changeStatus();
-    this.loader = false;
+      this.loader = false;
 
-    this.incluirCliente = false;
+      this.incluirCliente = false;
+      cliente = new Cliente;
+      this.changeStatus();
+  }
+
+  salvarCarteira() {
+    // this.loader = true;
+    let carteira = new Carteira;
+    carteira.idAcao = this.acaoSelecionada.id;
+    carteira.idCliente = this.clienteSelecionado.id;
+    carteira.quantidade = this.quantidade;
+
+    if(this.clienteSelecionado.saldo >= (this.acaoSelecionada.cotacao * this.quantidade)) {
+
+      this.carteiraService.incluirCarteira(carteira)
+      .subscribe(
+        error => console.log(error)
+      );
+
+      let cliente = new Cliente;
+      cliente = this.clienteSelecionado;
+      cliente.saldo -= (this.acaoSelecionada.cotacao * this.quantidade);
+
+      this.clienteService.alterarCliente(cliente)
+      .subscribe(
+        error => console.log(error)
+      );
+
+      this.loader = false;
+
+      this.incluirCarteira = false;
+      carteira = new Carteira;
+      this.changeStatus();
+
+    }else {
+      console.log("Saldo insuficiente para este investimento!!!");
+    }
   }
 
   listaAcoes() {
@@ -277,6 +367,13 @@ export class DashboardPageComponent implements OnInit {
   listaClientes() {
     const ref = this.dialogService.open(ClienteListaComponent, {
         header: 'Lista de Clientes',
+        width: '80%'
+    });
+  }
+
+  listaCarteiras() {
+    const ref = this.dialogService.open(CarteiraListaComponent, {
+        header: 'Lista de Carteiras',
         width: '80%'
     });
   }

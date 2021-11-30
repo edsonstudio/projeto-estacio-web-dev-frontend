@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import Cliente from '../models/cliente.model';
+import Carteira from '../models/carteira.model';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -12,44 +12,44 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class ClienteService {
-  readonly baseUrl = 'https://localhost:5001/api/v1/cliente/'
+export class CarteiraService {
+  readonly baseUrl = 'https://localhost:5001/api/v1/carteira/'
 
   constructor(private http: HttpClient) { }
 
-  listarClientes(): Observable<Cliente[]> {
+  listarCarteiras(): Observable<Carteira[]> {
     return this.http
-      .get<Cliente[]>(this.baseUrl + 'listar')
+      .get<Carteira[]>(this.baseUrl + 'listar')
       .pipe(
         catchError(this.tratarErro)
       );
   }
 
-  consultarCliente(id: number): Observable<Cliente> {
+  consultarCarteira(id: number): Observable<Carteira> {
     return this.http
-      .get<Cliente>(this.baseUrl + 'consultar/' + id, httpOptions)
+      .get<Carteira>(this.baseUrl + 'consultar/' + id, httpOptions)
       .pipe(
         catchError(this.tratarErro)
       );
   }
 
-  incluirCliente(cliente: Cliente) {
+  incluirCarteira(carteira: Carteira) {
     return this.http
-      .post(this.baseUrl + 'incluir/', cliente, httpOptions)
+      .post(this.baseUrl + 'incluir/', carteira, httpOptions)
       .pipe(
         catchError(this.tratarErro)
       );
   }
 
-  alterarCliente(cliente: Cliente) {
+  alterarCarteira(carteira: Carteira) {
     return this.http
-      .put(this.baseUrl + 'alterar/', cliente, httpOptions)
+      .put(this.baseUrl + 'alterar/', carteira, httpOptions)
       .pipe(
         catchError(this.tratarErro)
       );
   }
 
-  excluirCliente(Id: number) {
+  excluirCarteira(Id: number) {
     return this.http
       .delete(this.baseUrl + 'excluir?Id=' + Id, httpOptions)
       .pipe(
