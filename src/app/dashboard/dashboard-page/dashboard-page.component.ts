@@ -1,3 +1,5 @@
+import { ClienteService } from './../../services/cliente.service';
+import { ClienteListaComponent } from './../cliente-lista/cliente-lista.component';
 import { AcaoListComponent } from './../acao-list/acao-list.component';
 import { AcaoService } from './../../services/acao.service';
 import { MenuItem } from 'primeng/api';
@@ -5,6 +7,7 @@ import { PrimeNGConfig } from 'primeng/api';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {DialogService} from 'primeng/dynamicdialog';
 import Acao from 'src/app/models/acao.model';
+import Cliente from 'src/app/models/cliente.model';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -19,12 +22,16 @@ export class DashboardPageComponent implements OnInit {
   menubarItems: any[] = [];
   acoes: Acao[] = [];
 
+  nomeCliente: string = "";
+  saldo: number = 0;
+
   nome: string = "";
   cotacao: number = 0;
   descricao: string = "";
   variacao: number = 0;
 
   incluirAcao: boolean = false;
+  incluirCliente: boolean = false;
 
   displayPosition: boolean = false;
   displayModal: boolean = false;
@@ -32,6 +39,7 @@ export class DashboardPageComponent implements OnInit {
 
   constructor(
     private acaoService: AcaoService,
+    private clienteService: ClienteService,
     private primengConfig: PrimeNGConfig,
     public dialogService: DialogService,
     private _cdr: ChangeDetectorRef
@@ -128,7 +136,7 @@ export class DashboardPageComponent implements OnInit {
         label: 'Home',
         className: 'menubar-root',
         command: () => {
-          this.showPositionDialog('left');
+
         },
       },
       {
@@ -155,37 +163,17 @@ export class DashboardPageComponent implements OnInit {
         items: [
           {
             label: 'Novo',
-            icon: 'pi pi-fw pi-user-plus',
+            icon: 'pi pi-fw pi-plus',
             command: () => {
-              this.showPositionDialog('left');
+              this.incluirClienteModal('left');
             },
           },
           {
-            label: 'Editar',
-            icon: 'pi pi-fw pi-pencil',
+            label: 'Listar',
+            icon: 'pi pi-fw pi-bars',
             command: () => {
-              this.showPositionDialog('left');
+              this.listaClientes();
             },
-          },
-          {
-            label: 'Pesquisar',
-            icon: 'pi pi-fw pi-users',
-            items: [
-              {
-                label: 'Filtrar',
-                icon: 'pi pi-fw pi-filter',
-                command: () => {
-                  this.showPositionDialog('left');
-                },
-              },
-              {
-                label: 'Listar',
-                icon: 'pi pi-fw pi-bars',
-                command: () => {
-                  this.showPositionDialog('left');
-                },
-              }
-            ]
           }
         ]
       },
@@ -193,38 +181,18 @@ export class DashboardPageComponent implements OnInit {
         label: 'Carteiras',
         items: [
           {
-            label: 'Novo',
-            icon: 'pi pi-fw pi-user-plus',
+            label: 'Nova',
+            icon: 'pi pi-fw pi-plus',
             command: () => {
-              this.showPositionDialog('left');
+              this.incluirAcaoModal('left');
             },
           },
           {
-            label: 'Edit',
-            icon: 'pi pi-fw pi-pencil',
+            label: 'Listar',
+            icon: 'pi pi-fw pi-bars',
             command: () => {
-              this.showPositionDialog('left');
+              this.listaAcoes();
             },
-          },
-          {
-            label: 'Pesquisar',
-            icon: 'pi pi-fw pi-users',
-            items: [
-              {
-                label: 'Filtrar',
-                icon: 'pi pi-fw pi-filter',
-                command: () => {
-                  this.showPositionDialog('left');
-                },
-              },
-              {
-                label: 'Listar',
-                icon: 'pi pi-fw pi-bars',
-                command: () => {
-                  this.showPositionDialog('left');
-                },
-              }
-            ]
           }
         ]
       }
@@ -257,6 +225,11 @@ export class DashboardPageComponent implements OnInit {
     this.incluirAcao = true;
   }
 
+  incluirClienteModal(position: string) {
+    this.position = position;
+    this.incluirCliente = true;
+  }
+
   salvarAcao() {
     this.loader = true;
     let acao = new Acao;
@@ -277,12 +250,36 @@ export class DashboardPageComponent implements OnInit {
     this.incluirAcao = false;
   }
 
+  salvarCliente() {
+    this.loader = true;
+    let cliente = new Cliente;
+    cliente.nome = this.nomeCliente;
+    cliente.saldo = this.saldo;
+
+    this.clienteService.incluirCliente(cliente)
+      .subscribe(
+        error => console.log(error)
+      );
+
+    this.changeStatus();
+    this.loader = false;
+
+    this.incluirCliente = false;
+  }
+
   listaAcoes() {
     const ref = this.dialogService.open(AcaoListComponent, {
         header: 'Lista de Ações',
         width: '80%'
     });
-}
+  }
+
+  listaClientes() {
+    const ref = this.dialogService.open(ClienteListaComponent, {
+        header: 'Lista de Clientes',
+        width: '80%'
+    });
+  }
 
   changeStatus(): void {
     this._cdr.detectChanges();

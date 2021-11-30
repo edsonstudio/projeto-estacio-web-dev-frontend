@@ -25,12 +25,14 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 import { AcaoCardComponent } from './acao-card/acao-card.component';
 import { AcaoListComponent } from './acao-list/acao-list.component';
+import { ClienteListaComponent } from './cliente-lista/cliente-lista.component';
 
 @NgModule({
   declarations: [
     DashboardPageComponent,
     AcaoCardComponent,
-    AcaoListComponent
+    AcaoListComponent,
+    ClienteListaComponent
   ],
   imports: [
     SharedModule,
@@ -58,7 +60,8 @@ import { AcaoListComponent } from './acao-list/acao-list.component';
   exports:[
     DashboardPageComponent,
     AcaoCardComponent,
-    AcaoListComponent
+    AcaoListComponent,
+    ClienteListaComponent
   ]
 })
 export class DashboardModule { }

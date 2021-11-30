@@ -78,3 +78,32 @@
     </ng-template>
   </p-dialog>
 </div>
+
+
+<!-- Modal para adicionar cliente -->
+<p-dialog header="Incluir Cliente" [(visible)]="incluirCliente" [position]="position" [modal]="true"
+    [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+  <div class="p-grid p-fluid">
+    <div class="p-col-12 p-md-4">
+      <div class="p-inputgroup">
+        <span class="p-inputgroup-addon">Nome</span>
+        <input type="text" pInputText placeholder="Nome" [(ngModel)]="nomeCliente" maxlength="20">
+      </div>
+    </div>
+    <br>
+    <div class="p-field p-col-12 p-md-3">
+      <label for="horizontal">Saldo</label>
+      <p-inputNumber [(ngModel)]="saldo" [showButtons]="true" buttonLayout="horizontal" inputId="horizontal"
+        spinnerMode="horizontal" [step]="0.25" decrementButtonClass="p-button-danger"
+        incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+        mode="currency" currency="BRL">
+      </p-inputNumber>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-check" (click)="salvarCliente();" label="Salvar" class="p-button-text"></p-button>
+    <p-button icon="pi pi-times" (click)="incluirCliente=false" label="Cancelar"></p-button>
+  </ng-template>
+</p-dialog>
