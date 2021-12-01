@@ -8,8 +8,7 @@
 
 :host ::ng-deep .dock-window {
   width: 100%;
-  // height: calc(100vh - 34px);
-  height: 100%;
+  height: calc(100vh - 34px);
   position: relative;
   background-image: url("../../../assets/showcase/images/dock/window.jpg");
   background-repeat: no-repeat;
@@ -28,7 +27,6 @@
 
   .p-menuitem:first-child {
       font-weight: bold;
-      // padding: 0 1rem;
   }
 
   .p-menuitem-link {
@@ -136,6 +134,11 @@ p {
   min-width: 6rem;
 }
 
-// :host ::ng-deep .p-dialog .p-dialog-content {
-//   padding: 30px;
-// }
+:host ::ng-deep .p-carousel-items-content {
+  width: calc(100vw - 550px);
+}
+
+:host ::ng-deep .p-carousel-header {
+  font-size: 25px;
+  color: #FFFFFF;
+}

@@ -8,7 +8,6 @@ import { AcaoListComponent } from './../acao-list/acao-list.component';
 import { CarteiraListaComponent } from './../carteira-lista/carteira-lista.component';
 import { ClienteListaComponent } from './../cliente-lista/cliente-lista.component';
 
-
 import { AcaoService } from './../../services/acao.service';
 import { CarteiraService } from './../../services/carteira.service';
 import { ClienteService } from './../../services/cliente.service';
@@ -16,7 +15,6 @@ import { ClienteService } from './../../services/cliente.service';
 import Acao from 'src/app/models/acao.model';
 import Carteira from 'src/app/models/carteira.model';
 import Cliente from 'src/app/models/cliente.model';
-
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -24,6 +22,12 @@ import Cliente from 'src/app/models/cliente.model';
   providers: [DialogService]
 })
 export class DashboardPageComponent implements OnInit {
+
+  responsiveOptions: any;
+  options: any;
+
+  data: any;
+
   loader:boolean = false;
 
   dockItems: MenuItem[] = [];
@@ -31,6 +35,8 @@ export class DashboardPageComponent implements OnInit {
 
   acoes: Acao[] = [];
   acaoSelecionada: Acao = new Acao;
+  acoesNomes: string[] = [];
+  acoesCotacoes: number[] = [];
 
   clientes: Cliente[] = [];
   cliente: Cliente = new Cliente;
@@ -67,7 +73,62 @@ export class DashboardPageComponent implements OnInit {
     private primengConfig: PrimeNGConfig,
     public dialogService: DialogService,
     private _cdr: ChangeDetectorRef
-    ) { }
+    )
+    {
+      this.responsiveOptions = [
+        {
+            breakpoint: '1024px',
+            numVisible: 3,
+            numScroll: 3
+        },
+        {
+            breakpoint: '768px',
+            numVisible: 2,
+            numScroll: 2
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1,
+            numScroll: 1
+        }
+      ];
+
+      this.options = {
+        //display labels on data elements in graph
+        plugins: {
+          datalabels: {
+            align: 'end',
+            anchor: 'end',
+            borderRadius: 4,
+            backgroundColor: 'teal',
+            color: '#FFFFFF',
+            font: {
+              weight: 'bold',
+            },
+          },
+          // display chart title
+          title: {
+            display: true,
+            text: 'Cotações das Ações',
+            color: 'white',
+            font: {
+              weight: 'bold',
+              size: 20,
+            },
+          },
+          legend: {
+            position: 'right',
+            labels: {
+              color: 'white',
+              font: {
+                weight: 'bold',
+                size: 14,
+              },
+            }
+          }
+        }
+      };
+  }
 
   ngOnInit(): void {
 
@@ -81,78 +142,86 @@ export class DashboardPageComponent implements OnInit {
       {
         label: 'Finder',
         tooltipOptions: {
-          tooltipLabel: "Finder",
+          tooltipLabel: "Gráfico das Cotações",
           tooltipPosition: 'top',
           positionTop: -15,
           positionLeft: 15
         },
         icon: "assets/showcase/images/dock/finder.svg",
         command: () => {
-          this.showPositionDialog('left');
-          //this.displayFinder = true;
+          this.graficoPizza();
         }
       },
       {
         label: 'Terminal',
         tooltipOptions: {
-          tooltipLabel: "Terminal",
+          tooltipLabel: "Gráfico das Cotações",
           tooltipPosition: 'top',
           positionTop: -15,
           positionLeft: 15
         },
         icon: "assets/showcase/images/dock/terminal.svg",
         command: () => {
-          //this.displayTerminal = true;
+          this.graficoPizza();
         }
       },
       {
         label: 'App Store',
         tooltipOptions: {
-          tooltipLabel: "App Store",
+          tooltipLabel: "Gráfico das Cotações",
           tooltipPosition: 'top',
           positionLeft: 15,
           positionTop: -15
         },
         icon: "assets/showcase/images/dock/appstore.svg",
         command: () => {
-          //this.messageService.add({severity: 'error', summary: 'An unexpected error occurred while signing in.', detail: 'UNTRUSTED_CERT_TITLE'});
+          this.graficoPizza();
         }
       },
       {
         label: 'Safari',
         tooltipOptions: {
-          tooltipLabel: "Safari",
+          tooltipLabel: "Gráfico das Cotações",
           tooltipPosition: 'top',
           positionTop: -15,
           positionLeft: 15
         },
         icon: "assets/showcase/images/dock/safari.svg",
         command: () => {
-          //this.messageService.add({severity: 'warn', summary: 'Safari has stopped working'});
+          this.graficoPizza();
         }
       },
       {
         label: 'Photos',
         tooltipOptions: {
-          tooltipLabel: "Photos",
+          tooltipLabel: "Meu Portifólio",
           tooltipPosition: 'top',
           positionTop: -15,
           positionLeft: 15
         },
         icon: "assets/showcase/images/dock/photos.svg",
         command: () => {
-          //this.displayGalleria = true
+          window.open("https://www.edson.studio/", "_blank");
         }
       },
       {
         label: 'GitHub',
+        tooltipOptions: {
+          tooltipLabel: "Meu Github",
+          tooltipPosition: 'top',
+          positionTop: -15,
+          positionLeft: 15
+        },
         icon: "assets/showcase/images/dock/github.svg",
+        command: () => {
+          window.open("https://github.com/edsonstudio", "_blank");
+        }
       },
       {
         label: 'Trash',
         icon: "assets/showcase/images/dock/trash.png",
         command: () => {
-          //this.messageService.add({severity: 'info', summary: 'Empty Trash'});
+          this.graficoPizza();
         }
       }
     ];
@@ -229,8 +298,6 @@ export class DashboardPageComponent implements OnInit {
   listarAcoes() {
     this.acoes = [];
 
-    // this.loader = true;
-
     this.acaoService.listarAcoes()
     .subscribe(
       acoes => this.acoes = acoes,
@@ -286,7 +353,6 @@ export class DashboardPageComponent implements OnInit {
   }
 
   salvarAcao() {
-    // this.loader = true;
     let acao = new Acao;
     acao.nome = this.nome;
     acao.cotacao = this.cotacao;
@@ -306,7 +372,6 @@ export class DashboardPageComponent implements OnInit {
   }
 
   salvarCliente() {
-    // this.loader = true;
     let cliente = new Cliente;
     cliente.nome = this.nomeCliente;
     cliente.saldo = this.saldo;
@@ -324,7 +389,6 @@ export class DashboardPageComponent implements OnInit {
   }
 
   salvarCarteira() {
-    // this.loader = true;
     let carteira = new Carteira;
     carteira.idAcao = this.acaoSelecionada.id;
     carteira.idCliente = this.clienteSelecionado.id;
@@ -380,5 +444,59 @@ export class DashboardPageComponent implements OnInit {
 
   changeStatus(): void {
     this._cdr.detectChanges();
+  }
+
+  graficoPizza() {
+    this.data = [];
+    this.acoesNomes = [];
+    this.acoesCotacoes = [];
+
+    this.acoes.forEach(acao => {
+      this.acoesNomes.push(acao.nome);
+      this.acoesCotacoes.push(acao.cotacao);
+    });
+
+    this.data = {
+      labels: this.acoesNomes,
+      fontColor: "white",
+      datasets: [
+          {
+              data: this.acoesCotacoes,
+              backgroundColor: [
+                "#42A5F5",
+                "#66BB6A",
+                "#FFA726",
+                "#f95959",
+                "#9896f1",
+                "#a7bcb9",
+                "#2772db",
+                "#f8da5b",
+                "#bbe9db",
+                "#f6378f",
+                "#ffdd00",
+                "#e70000",
+                "#10316b",
+                "#3b0944"
+              ],
+              hoverBackgroundColor: [
+                "#42A5F5",
+                "#66BB6A",
+                "#FFA726",
+                "#f95959",
+                "#9896f1",
+                "#a7bcb9",
+                "#2772db",
+                "#f8da5b",
+                "#bbe9db",
+                "#f6378f",
+                "#ffdd00",
+                "#e70000",
+                "#10316b",
+                "#3b0944"
+              ]
+          }
+      ]
+    };
+    this.changeStatus();
   }
 }

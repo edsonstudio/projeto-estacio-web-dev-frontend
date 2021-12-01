@@ -23,6 +23,8 @@ import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {TableModule} from 'primeng/table';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {DropdownModule} from 'primeng/dropdown';
+import {ChartModule} from 'primeng/chart';
+import {CarouselModule} from 'primeng/carousel';
 
 import { AcaoCardComponent } from './acao-card/acao-card.component';
 import { AcaoListComponent } from './acao-list/acao-list.component';
@@ -59,7 +61,9 @@ import { CarteiraListaComponent } from './carteira-lista/carteira-lista.componen
     InputTextareaModule,
     DynamicDialogModule,
     ConfirmDialogModule,
-    DropdownModule
+    DropdownModule,
+    ChartModule,
+    CarouselModule
   ],
   exports:[
     DashboardPageComponent,
